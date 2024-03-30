@@ -21,7 +21,7 @@ const initApp = async () => {
   await redisClient.connect();
 
   app.listen(SERVER_PORT, () => {
-    console.log(`Listening on http://localhost:${SERVER_PORT}`);
+    console.log(`Server ready 🤙🏽 Listening on port ${SERVER_PORT}`);
   });
 
   process.on("SIGINT", () => {
