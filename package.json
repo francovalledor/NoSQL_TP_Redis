@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "express": "^4.19.2",
+    "http-errors": "^2.0.0",
+    "http-status-codes": "^2.3.0",
     "lodash": "^4.17.21",
     "redis": "^4.6.13"
   }
