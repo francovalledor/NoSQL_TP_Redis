@@ -1,24 +1,15 @@
-import express, { Request, Response } from "express";
+import 'express-async-errors';
+import express from "express";
 import redisClient from "./redisClient";
 import { router as mandalorianRouter } from "./mandalorian/router";
-
-const app = express();
+import { errorHandler } from './errorHandler';
 
 const SERVER_PORT = process.env.PORT || 3000;
 
-app.get("/", async (req: Request, res: Response) => {
-  await Promise.all(
-    Object.entries(req.query).map(([key, value]) =>
-      redisClient.set(key, value as string)
-    )
-  );
-
-  const keys = await redisClient.keys("*");
-
-  return res.json({ keys });
-});
+const app = express();
 
 app.use("/the-mandalorian", mandalorianRouter);
+app.use(errorHandler);
 
 const initApp = async () => {
   await redisClient.connect();
