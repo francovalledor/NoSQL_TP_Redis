@@ -148,3 +148,5 @@ export const data = {
     },
   ],
 };
+
+export type Season = (typeof data['seasons'])[number]

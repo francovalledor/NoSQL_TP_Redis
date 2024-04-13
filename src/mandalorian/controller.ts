@@ -1,10 +1,11 @@
 import { RequestHandler } from "express";
-import { data } from "./data";
 import { StatusCodes } from "http-status-codes";
 import service from "./service";
 
-const getDetails: RequestHandler = (req, res) => {
-  res.send(data);
+const getDetails: RequestHandler = async (req, res) => {
+  const response = await service.list();
+  
+  res.send(response);
 };
 
 const reserve: RequestHandler = async (req, res) => {

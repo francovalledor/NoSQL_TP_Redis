@@ -1,11 +1,15 @@
 import redisClient from "../redisClient";
-import { data } from "./data";
+import { data, Season } from "./data";
+import { fromPairs } from "lodash";
+
+const getEpisodeIdentifier = (season: number, episode: number) =>
+  `${season}:${episode}`;
 
 const PREFIX = "mandalorian";
 
 const REDIS_KEYS = {
   episodeStatus: (season: number, episode: number) =>
-    `${PREFIX}:statuses:${season}:${episode}`,
+    `${PREFIX}:statuses:${getEpisodeIdentifier(season, episode)}`,
 };
 
 enum STATUS {
@@ -23,17 +27,31 @@ const getStatus = async (season: number, episode: number): Promise<STATUS> => {
 };
 
 const getAllStatuses = async () => {
-  const allTheEpisodes = data.seasons.map((season) =>
-    season.episodes.map((episode) => ({season: season.number, episode: episode.number }))
-  ).flat();
+  const allTheEpisodes = data.seasons
+    .map((season) =>
+      season.episodes.map((episode) => ({
+        season: season.number,
+        episode: episode.number,
+      }))
+    )
+    .flat();
 
-  const allTheKeys = allTheEpisodes.map(({episode, season}) => REDIS_KEYS.episodeStatus(season, episode));
+  const allTheKeys = allTheEpisodes.map(({ episode, season }) =>
+    REDIS_KEYS.episodeStatus(season, episode)
+  );
 
-  const response = (await redisClient.mGet(allTheKeys)).map(status => status ?? STATUS.AVAILABLE);
+  const response = (await redisClient.mGet(allTheKeys)).map(
+    (status) => status ?? STATUS.AVAILABLE
+  );
 
-  const joined = allTheEpisodes.map(({episode, season}, index) => ({season, episode, status: response[index]}))
+  const dictionary = fromPairs(
+    allTheEpisodes.map(({ episode, season }, index) => [
+      getEpisodeIdentifier(season, episode),
+      response[index],
+    ])
+  );
 
-  return joined;
+  return dictionary;
 };
 
 const isAvailable = async (season: number, episode: number) => {
@@ -62,4 +80,17 @@ const confirmRent = async (season: number, episode: number) => {
   );
 };
 
-export default { isAvailable, reserve, confirmRent };
+const list = async () => {
+  const statuses = await getAllStatuses();
+  const enrichSeasonWithStatuses = (season: Season) => ({
+    ...season,
+    episodes: season.episodes.map((episode) => ({
+      ...episode,
+      status: statuses[getEpisodeIdentifier(season.number, episode.number)],
+    })),
+  });
+
+  return { ...data, seasons: data.seasons.map(enrichSeasonWithStatuses) };
+};
+
+export default { isAvailable, reserve, confirmRent, list };
