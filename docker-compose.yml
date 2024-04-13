@@ -2,16 +2,17 @@ version: '3'
 
 services:
   app:
-    image: 'node:16-alpine'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
-      - 9229:9229 #debugger
+      - 9229:9229 # debugger
     environment:
       - NODE_ENV=development
     volumes:
       - '.:/home/server'
     working_dir: /home/server
-    command: npm run dev
     restart: always
 
   redis:
