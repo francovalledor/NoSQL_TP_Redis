@@ -14,6 +14,8 @@ const reserve: RequestHandler = async (req, res) => {
   const season = validateMandatoryInteger("season", req.query);
   const episode = validateMandatoryInteger("episode", req.query);
 
+  validateEpisodeExists(season, episode);
+
   await service.reserve(Number(season), Number(episode));
 
   res.sendStatus(StatusCodes.OK);
@@ -22,6 +24,8 @@ const reserve: RequestHandler = async (req, res) => {
 const pay: RequestHandler = async (req, res) => {
   const season = validateMandatoryInteger("season", req.query);
   const episode = validateMandatoryInteger("episode", req.query);
+  
+  validateEpisodeExists(season, episode);
 
   // TODO: validate is reserved
   await service.confirmRent(Number(season), Number(episode));
@@ -47,4 +51,10 @@ const validateMandatoryInteger = (paramName: string, params: RequestInputs) => {
   if (isNaN(parsedValue) || !isInteger(parsedValue)) throw createHttpError.BadRequest(`The param "${paramName}" should be an integer. Received: "${value}"`);
 
   return parsedValue;
+}
+
+const validateEpisodeExists = (seasonNumber: number, episodeNumber: number) => {
+  if (!service.seasonExists(seasonNumber)) throw new createHttpError.BadRequest(`The season ${seasonNumber} does not exist`);
+
+  if (!service.episodeExists(seasonNumber, episodeNumber)) throw new createHttpError.BadRequest(`The episode does not exist. (season ${seasonNumber} episode ${episodeNumber})`);
 }

@@ -93,4 +93,16 @@ const list = async () => {
   return { ...data, seasons: data.seasons.map(enrichSeasonWithStatuses) };
 };
 
-export default { isAvailable, reserve, confirmRent, list };
+const getSeasonBySeasonNumber = (seasonNumber: number) => data.seasons.find(season => season.number === seasonNumber)
+
+const seasonExists = (season: number) => !!getSeasonBySeasonNumber(season);
+
+const episodeExists = (seasonNumber: number, episodeNumber: number) => {
+  const season = getSeasonBySeasonNumber(seasonNumber);
+
+  if (!season) return false;
+
+  return !!season.episodes.find(ep => ep.number === episodeNumber);
+};
+
+export default { isAvailable, reserve, confirmRent, list, seasonExists, episodeExists };
