@@ -12,18 +12,18 @@ const REDIS_KEYS = {
     `${PREFIX}:statuses:${getEpisodeIdentifier(season, episode)}`,
 };
 
-enum STATUS {
+export enum EPISODE_STATUS {
   RESERVED = "RESERVED",
   RENTED = "RENTED",
   AVAILABLE = "AVAILABLE",
 }
 
-const getStatus = async (season: number, episode: number): Promise<STATUS> => {
+const getEpisodeStatus = async (season: number, episode: number): Promise<EPISODE_STATUS> => {
   const response = await redisClient.get(
     REDIS_KEYS.episodeStatus(season, episode)
   );
 
-  return (response ?? STATUS.AVAILABLE) as STATUS;
+  return (response ?? EPISODE_STATUS.AVAILABLE) as EPISODE_STATUS;
 };
 
 const getAllStatuses = async () => {
@@ -41,7 +41,7 @@ const getAllStatuses = async () => {
   );
 
   const response = (await redisClient.mGet(allTheKeys)).map(
-    (status) => status ?? STATUS.AVAILABLE
+    (status) => status ?? EPISODE_STATUS.AVAILABLE
   );
 
   const dictionary = fromPairs(
@@ -55,9 +55,9 @@ const getAllStatuses = async () => {
 };
 
 const isAvailable = async (season: number, episode: number) => {
-  const status = await getStatus(season, episode);
+  const status = await getEpisodeStatus(season, episode);
 
-  return status === STATUS.AVAILABLE;
+  return status === EPISODE_STATUS.AVAILABLE;
 };
 
 const reserve = async (season: number, episode: number) => {
@@ -65,7 +65,7 @@ const reserve = async (season: number, episode: number) => {
 
   await redisClient.set(
     REDIS_KEYS.episodeStatus(season, episode),
-    STATUS.RESERVED,
+    EPISODE_STATUS.RESERVED,
     { EX: RESERVATION_TTL }
   );
 };
@@ -75,7 +75,7 @@ const confirmRent = async (season: number, episode: number) => {
 
   await redisClient.set(
     REDIS_KEYS.episodeStatus(season, episode),
-    STATUS.RENTED,
+    EPISODE_STATUS.RENTED,
     { EX: RENT_TTL }
   );
 };
@@ -105,4 +105,4 @@ const episodeExists = (seasonNumber: number, episodeNumber: number) => {
   return !!season.episodes.find(ep => ep.number === episodeNumber);
 };
 
-export default { isAvailable, reserve, confirmRent, list, seasonExists, episodeExists };
+export default { isAvailable, reserve, confirmRent, list, seasonExists, episodeExists, getEpisodeStatus };
