@@ -10,6 +10,18 @@ const getDetails: RequestHandler = async (req, res) => {
   res.send(response);
 };
 
+const getEpisodeDetails: RequestHandler = async (req, res) => {
+  const season = validateMandatoryInteger("season", req.query);
+  const episode = validateMandatoryInteger("episode", req.query);
+
+  validateEpisodeExists(season, episode);
+
+  const episodeData = service.getEpisode(season, episode);
+  const status = await service.getEpisodeStatus(season, episode);
+
+  res.send({ ...episodeData, status });
+};
+
 const reserve: RequestHandler = async (req, res) => {
   const season = validateMandatoryInteger("season", req.query);
   const episode = validateMandatoryInteger("episode", req.query);
@@ -60,7 +72,7 @@ const pay: RequestHandler = async (req, res) => {
   return res.sendStatus(StatusCodes.OK);
 };
 
-export default { getDetails, reserve, pay };
+export default { getDetails, reserve, pay, getEpisodeDetails };
 
 type RequestInputs = Request["query"] | Request["params"] | Request["body"];
 
