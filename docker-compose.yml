@@ -15,6 +15,16 @@ services:
     working_dir: /home/server
     restart: always
 
+  ui: 
+    build:
+      context: ./mandalorian-ui
+      dockerfile: Dockerfile.dev
+    ports:
+      - 5173:5173
+    environment:
+      - NODE_ENV=development
+    restart: always
+
   redis:
     image: redis
     ports:
