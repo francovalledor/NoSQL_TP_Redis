@@ -18,7 +18,10 @@ export enum EPISODE_STATUS {
   AVAILABLE = "AVAILABLE",
 }
 
-const getEpisodeStatus = async (season: number, episode: number): Promise<EPISODE_STATUS> => {
+const getEpisodeStatus = async (
+  season: number,
+  episode: number
+): Promise<EPISODE_STATUS> => {
   const response = await redisClient.get(
     REDIS_KEYS.episodeStatus(season, episode)
   );
@@ -83,17 +86,30 @@ const list = async () => {
 };
 
 const getSeasonEpisodes = (seasonNumber: number): Episode[] => {
-  const seasonEpisodes = episodesData.filter(episode => episode.season === seasonNumber);
+  const seasonEpisodes = episodesData.filter(
+    (episode) => episode.season === seasonNumber
+  );
 
-  return sortBy(seasonEpisodes, (ep) => ep.episode)
-}
+  return sortBy(seasonEpisodes, (ep) => ep.episode);
+};
 
-const getEpisode = (seasonNumber: number, episodeNumber: number) => episodesData.find(ep => ep.episode === episodeNumber && ep.season == seasonNumber);
+const getEpisode = (seasonNumber: number, episodeNumber: number) =>
+  episodesData.find(
+    (ep) => ep.episode === episodeNumber && ep.season == seasonNumber
+  );
 
 const seasonExists = (season: number) => !!getSeasonEpisodes(season).length;
 
 const episodeExists = (seasonNumber: number, episodeNumber: number) => {
-  return getEpisode(seasonNumber, episodeNumber)
+  return getEpisode(seasonNumber, episodeNumber);
 };
 
-export default { isAvailable, reserve, confirmRent, list, seasonExists, episodeExists, getEpisodeStatus };
+export default {
+  isAvailable,
+  reserve,
+  confirmRent,
+  list,
+  seasonExists,
+  episodeExists,
+  getEpisodeStatus,
+};

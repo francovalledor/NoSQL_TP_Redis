@@ -9,25 +9,42 @@
 
 const withAttr = (name, value) => `[${name}="${value}"]`;
 
-const getActor = (el) => el.querySelector(withAttr('data-testid', "title-cast-item__actor")).innerText;
+const getActor = (el) =>
+  el.querySelector(withAttr("data-testid", "title-cast-item__actor")).innerText;
 
-const getAllItems = () => document.querySelector(withAttr('data-testid', "title-cast"))?.querySelectorAll(withAttr('data-testid', "title-cast-item"))
+const getAllItems = () =>
+  document
+    .querySelector(withAttr("data-testid", "title-cast"))
+    ?.querySelectorAll(withAttr("data-testid", "title-cast-item"));
 
-const getCharacters = (el) => Array.from(el.querySelectorAll(withAttr('data-testid', "cast-item-characters-link"))).map(i => i.innerText).flat();
+const getCharacters = (el) =>
+  Array.from(
+    el.querySelectorAll(withAttr("data-testid", "cast-item-characters-link"))
+  )
+    .map((i) => i.innerText)
+    .flat();
 
-const getInfo = (el) => ({actor: getActor(el), characters: getCharacters(el)})
+const getInfo = (el) => ({
+  actor: getActor(el),
+  characters: getCharacters(el),
+});
 
-const getEpisodeNumber = () => document.querySelector(withAttr('data-testid', "hero-subnav-bar-season-episode-numbers-section")).innerText
-const getEpisodeName = () => document.querySelector(withAttr('data-testid', "hero__primary-text")).innerText
+const getEpisodeNumber = () =>
+  document.querySelector(
+    withAttr("data-testid", "hero-subnav-bar-season-episode-numbers-section")
+  ).innerText;
+const getEpisodeName = () =>
+  document.querySelector(withAttr("data-testid", "hero__primary-text"))
+    .innerText;
 
 const getEpisodeData = () => {
-    const items = getAllItems();
+  const items = getAllItems();
 
-    const number = getEpisodeNumber();
-    const name = getEpisodeName();
-    const cast = Array.from(items).map(getInfo);
+  const number = getEpisodeNumber();
+  const name = getEpisodeName();
+  const cast = Array.from(items).map(getInfo);
 
-    return {number, cast, name}
-}
+  return { number, cast, name };
+};
 
-getEpisodeData()
+getEpisodeData();

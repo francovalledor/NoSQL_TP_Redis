@@ -1,8 +1,8 @@
-import 'express-async-errors';
+import "express-async-errors";
 import express from "express";
 import redisClient from "./redisClient";
 import { router as mandalorianRouter } from "./mandalorian/router";
-import { errorHandler } from './errorHandler';
+import { errorHandler } from "./errorHandler";
 
 const SERVER_PORT = process.env.PORT || 3000;
 
