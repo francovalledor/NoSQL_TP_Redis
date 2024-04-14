@@ -1,6 +1,6 @@
 import redisClient from "../redisClient";
-import { data, Season } from "./data";
-import { fromPairs } from "lodash";
+import { fromPairs, sortBy } from "lodash";
+import { Episode, episodesData } from "./episodesData";
 
 const getEpisodeIdentifier = (season: number, episode: number) =>
   `${season}:${episode}`;
@@ -27,16 +27,7 @@ const getEpisodeStatus = async (season: number, episode: number): Promise<EPISOD
 };
 
 const getAllStatuses = async () => {
-  const allTheEpisodes = data.seasons
-    .map((season) =>
-      season.episodes.map((episode) => ({
-        season: season.number,
-        episode: episode.number,
-      }))
-    )
-    .flat();
-
-  const allTheKeys = allTheEpisodes.map(({ episode, season }) =>
+  const allTheKeys = episodesData.map(({ episode, season }) =>
     REDIS_KEYS.episodeStatus(season, episode)
   );
 
@@ -45,7 +36,7 @@ const getAllStatuses = async () => {
   );
 
   const dictionary = fromPairs(
-    allTheEpisodes.map(({ episode, season }, index) => [
+    episodesData.map(({ episode, season }, index) => [
       getEpisodeIdentifier(season, episode),
       response[index],
     ])
@@ -82,27 +73,27 @@ const confirmRent = async (season: number, episode: number) => {
 
 const list = async () => {
   const statuses = await getAllStatuses();
-  const enrichSeasonWithStatuses = (season: Season) => ({
-    ...season,
-    episodes: season.episodes.map((episode) => ({
-      ...episode,
-      status: statuses[getEpisodeIdentifier(season.number, episode.number)],
-    })),
+
+  const enrichSeasonWithStatuses = (episode: Episode) => ({
+    ...episode,
+    status: statuses[getEpisodeIdentifier(episode.season, episode.episode)],
   });
 
-  return { ...data, seasons: data.seasons.map(enrichSeasonWithStatuses) };
+  return episodesData.map(enrichSeasonWithStatuses);
 };
 
-const getSeasonBySeasonNumber = (seasonNumber: number) => data.seasons.find(season => season.number === seasonNumber)
+const getSeasonEpisodes = (seasonNumber: number): Episode[] => {
+  const seasonEpisodes = episodesData.filter(episode => episode.season === seasonNumber);
 
-const seasonExists = (season: number) => !!getSeasonBySeasonNumber(season);
+  return sortBy(seasonEpisodes, (ep) => ep.episode)
+}
+
+const getEpisode = (seasonNumber: number, episodeNumber: number) => episodesData.find(ep => ep.episode === episodeNumber && ep.season == seasonNumber);
+
+const seasonExists = (season: number) => !!getSeasonEpisodes(season).length;
 
 const episodeExists = (seasonNumber: number, episodeNumber: number) => {
-  const season = getSeasonBySeasonNumber(seasonNumber);
-
-  if (!season) return false;
-
-  return !!season.episodes.find(ep => ep.number === episodeNumber);
+  return getEpisode(seasonNumber, episodeNumber)
 };
 
 export default { isAvailable, reserve, confirmRent, list, seasonExists, episodeExists, getEpisodeStatus };
