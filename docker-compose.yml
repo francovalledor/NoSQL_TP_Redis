@@ -11,8 +11,9 @@ services:
     environment:
       - NODE_ENV=development
     volumes:
-      - '.:/home/server'
-    working_dir: /home/server
+      - './server:/app'
+      ## Enable HMR https://medium.com/@kartikio/setup-node-ts-local-development-environment-with-docker-and-hot-reloading-922db9016119
+      - ignore:/app/node_modules/
     restart: always
 
   ui: 
@@ -23,6 +24,10 @@ services:
       - 5173:5173
     environment:
       - NODE_ENV=development
+    volumes:
+      - './mandalorian-ui:/app'
+      ## Enable HMR https://medium.com/@kartikio/setup-node-ts-local-development-environment-with-docker-and-hot-reloading-922db9016119
+      - ignore2:/app/node_modules/
     restart: always
 
   redis:
@@ -41,3 +46,7 @@ services:
       - redis
     volumes:
       - ../redis-insight/:/data
+
+volumes:
+  ignore:
+  ignore2:
