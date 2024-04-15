@@ -1,12 +1,14 @@
+import { Episode } from "./types";
+
 const HOST = `http://localhost:3000`;
 
 const BASE_URL = `${HOST}/the-mandalorian/`;
 
-const fetchJson = async (...params: Parameters<typeof fetch>) => fetch(...params).then(res => res.json())
+const fetchJson = async <T>(...params: Parameters<typeof fetch>): Promise<T> => fetch(...params).then(res => res.json())
 
-export const getAllEpisodes = () => fetchJson(BASE_URL);
+export const fetchAllEpisodes = () => fetchJson<Episode[]>(BASE_URL);
 
-export const getEpisodeDetails = (season: number, episode: number) => fetchJson(`${BASE_URL}/episode?season=${season}&episode=${episode}`);
+export const fetchEpisodeDetails = (season: number, episode: number) => fetchJson(`${BASE_URL}/episode?season=${season}&episode=${episode}`);
 
 export const reserve = (season: number, episode: number) => fetchJson(`${BASE_URL}/reserve?season=${season}&episode=${episode}`, {method: "POST"});
 
