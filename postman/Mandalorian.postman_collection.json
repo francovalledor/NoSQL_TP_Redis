@@ -41,11 +41,39 @@
 					"query": [
 						{
 							"key": "season",
-							"value": "0"
+							"value": "1"
 						},
 						{
 							"key": "episode",
 							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Episode Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/the-mandalorian/episode?season=2&episode=2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"the-mandalorian",
+						"episode"
+					],
+					"query": [
+						{
+							"key": "season",
+							"value": "2"
+						},
+						{
+							"key": "episode",
+							"value": "2"
 						}
 					]
 				}
@@ -69,7 +97,7 @@
 					"query": [
 						{
 							"key": "season",
-							"value": "0"
+							"value": "1"
 						},
 						{
 							"key": "episode",
