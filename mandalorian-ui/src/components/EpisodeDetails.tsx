@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Episode } from "../types";
 import { fetchEpisodeDetails } from "../fetch";
 import { Cast } from "./EpisodeListItem/Cast";
+import { ActionButton } from "./ActionButton";
 
 export const Details: React.FC = () => {
   const { season, episode } = useParams();
@@ -25,9 +26,7 @@ export const Details: React.FC = () => {
 
   return (
     <>
-      <h2 className="fs-3">{data.name} (S{season}E{episode})</h2>
-      <div className="d-flex justify-content-between">
-      </div>
+      <h2 className="fs-3">{data.name} (S{season}E{episode}) <ActionButton episode={data} /></h2>
       <div className="my-3">
         <h3 className="fs-4 mb-2">Cast:</h3>
         <Cast cast={data.cast} />

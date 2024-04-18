@@ -8,8 +8,8 @@ const fetchJson = async <T>(...params: Parameters<typeof fetch>): Promise<T> => 
 
 export const fetchAllEpisodes = () => fetchJson<Episode[]>(BASE_URL);
 
-export const fetchEpisodeDetails = (season: number, episode: number) => fetchJson(`${BASE_URL}/episode?season=${season}&episode=${episode}`);
+export const fetchEpisodeDetails = (season: number, episode: number) => fetchJson<Episode>(`${BASE_URL}/episode?season=${season}&episode=${episode}`);
 
-export const reserve = (season: number, episode: number) => fetchJson(`${BASE_URL}/reserve?season=${season}&episode=${episode}`, {method: "POST"});
+export const reserve = (season: number, episode: number) => fetch(`${BASE_URL}/reserve?season=${season}&episode=${episode}`, {method: "POST"});
 
-export const pay = (season: number, episode: number) => fetchJson(`${BASE_URL}/pay?season=${season}&episode=${episode}`, {method: "POST"});
+export const pay = (season: number, episode: number) => fetch(`${BASE_URL}/pay?season=${season}&episode=${episode}`, {method: "POST"});

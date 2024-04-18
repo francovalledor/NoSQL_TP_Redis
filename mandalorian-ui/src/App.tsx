@@ -1,15 +1,18 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
-import { Link, Navigate, Route, Routes } from "react-router-dom";
-import { AllTheEpisodes } from "./components/AllEpisodes";
+
+import { Navigate, Route, Routes } from "react-router-dom";
+import { Home } from './components/Home/Home';
+import { Details } from './components/EpisodeDetails';
+import { Title } from './components/Home/Title';
 
 function App() {
   return (
-    <div className="container" style={{height: "100vh"}}>
-      <h1><Link to={"/"}>The Mandalorian</Link></h1>
+    <div className="container">
+      <Title />
       <Routes>
-        <Route path="/" element={<AllTheEpisodes />}></Route>
-        <Route path="about" element={<div>about</div>} />
-        <Route path="dashboard" element={<div>dashboard</div>} />
+        <Route path="/" element={<Home />}></Route>
+        <Route path='/details/season/:season/episode/:episode/:name' element={<Details />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
