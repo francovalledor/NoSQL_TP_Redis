@@ -1,3 +1,4 @@
+import { ListGroup } from "react-bootstrap";
 import { CastItem } from "../../types"
 import { Character } from "./Character";
 
@@ -8,5 +9,5 @@ interface Props {
 export const Cast: React.FC<Props> = ({cast}) => {
   const flatten = cast.flatMap(({characters, actor}) => characters.map(character => ({character, actor})));
 
-  return <>{flatten.map(Character)}</>
+  return <ListGroup>{flatten.map(Character)}</ListGroup>
 };

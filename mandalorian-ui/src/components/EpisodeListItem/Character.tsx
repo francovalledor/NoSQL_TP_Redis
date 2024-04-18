@@ -1,3 +1,5 @@
+import { ListGroup } from "react-bootstrap";
+
 interface CharacterProps {
   character: string;
   actor: string;
@@ -5,9 +7,9 @@ interface CharacterProps {
 
 export const Character: React.FC<CharacterProps> = ({ actor, character }) => {
   return (
-    <>
-      <div className="character">{character}</div>
-      <div className="actor">{actor}</div>
-    </>
+    <ListGroup.Item>
+      <span className="character">{character}</span>
+      (<span className="actor">{actor}</span>)
+    </ListGroup.Item>
   );
 };

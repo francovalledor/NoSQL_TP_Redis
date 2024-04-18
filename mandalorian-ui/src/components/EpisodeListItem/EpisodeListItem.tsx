@@ -1,5 +1,5 @@
 import { Episode } from "../../types";
-import { Cast } from "./Cast";
+import { Link } from "react-router-dom";
 
 interface Props {
   episode: Episode;
@@ -8,14 +8,16 @@ interface Props {
 export const EpisodeListItem: React.FC<Props> = ({ episode }) => {
   return (
     <>
-      <div className="season-title">{episode.season}</div>
-      <div className="episode-number">{episode.episode}</div>
-      <h3 className="episode-title">{episode.name}</h3>
-      <div className="status">{episode.status}</div>
-      <Cast cast={episode.cast}/>
+      <div className="col-sm-6">
+        <div className="card">
+          <div className="card-body">
+            <h5 className="card-title"><Link to={`/details/season/${episode.season}/episode/${episode.episode}/${episode.name}`}>{episode.name}</Link></h5>
+            <a href="#" className="mx-2 btn btn-primary">
+              Go somewhere
+            </a>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
-
-
-

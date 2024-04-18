@@ -21,14 +21,15 @@ export const AllTheEpisodes = () => {
 
   return (
     <>
-      <h2>All The Episodes</h2>
-      <ul>
-        {data?.map((ep) => (
-          <li>
-            <EpisodeListItem episode={ep} />
-          </li>
-        ))}
-      </ul>
+      <div className="album py-5 bg-light">
+        <div className="container">
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {data?.map((ep) => (
+              <EpisodeListItem episode={ep} />
+            ))}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
